@@ -1,4 +1,7 @@
 import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Main from './mains/Main.jsx';
 
 import ResetCSS from '../assets/resetCss.js';
 import GlobalStyles from '../assets/GlobalStyles.js';
@@ -8,7 +11,11 @@ export default function App() {
     <>
       <ResetCSS />
       <GlobalStyles />
-      <h1>Hello World</h1>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Main />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
