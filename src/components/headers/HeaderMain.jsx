@@ -28,8 +28,9 @@ const HeaderWrapper = styled.header`
 
   span {
     position: absolute;
-    width: 2px;
-    height: 2px;
-    background-color: var(--color-theme)
+    right: 0;
+    width: 4px;
+    height: 4px;
+    background-color: var(--color-theme);
   }
 `;
