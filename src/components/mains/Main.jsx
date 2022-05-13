@@ -6,16 +6,19 @@ import FooterMain from '../footers/FooterMain.jsx';
 
 export default function Main() {
   return (
-    <>
+    <MainWrapper>
       <HeaderMain />
-      <MainWrapper>
-        <h1>Aqui é o Main</h1>
-      </MainWrapper>
+      <h1>Aqui é o Main</h1>
       <FooterMain />
-    </>
+    </MainWrapper>
   );
 }
 
 const MainWrapper = styled.main`
-
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 100vw;
+max-width: 480px;
+height: 100vh;
 `;
