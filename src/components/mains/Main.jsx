@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
+
+import { IoIosAdd } from 'react-icons/io';
 
 import HeaderMain from '../headers/HeaderMain.jsx';
 import FooterMain from '../footers/FooterMain.jsx';
@@ -33,22 +36,16 @@ export default function Main() {
       </section>
       <section className="products">
         <article>
-          <h2>titulo</h2>
-          <p>$40</p>
-          <img src="#" />
-          <div className="icons">
-            <p>icone1</p>
-            <p>icone2</p>
-          </div>
+          <h2>Chapéu do Grêmio borrado</h2>
+          <p className="price">$40</p>
+          <img src="https://i.ibb.co/xLTM5MF/ok-24.png" />
+          <IoIosAdd />
         </article>
         <article>
           <h2>titulo</h2>
-          <p>$40</p>
+          <p className="price">$40</p>
           <img src="#" />
-          <div className="icons">
-            <p>icone1</p>
-            <p>icone2</p>
-          </div>
+          <IoIosAdd />
         </article>
       </section>
       <FooterMain />
@@ -126,13 +123,53 @@ font-family: var(--font);
 
     article {
       height: 200px;
-      padding: 40px;
+      padding: 70px;
       margin: 12px 20px;
       background-color: red;
       border-radius: 15px;
       position: relative;
 
+        h2 {
+          position: absolute;
+          /* word-break: break-all; */
+          line-height: 20px;
+          font-size: 15px;
+          font-weight: 400;
+          top: 40px;
+          left: 10px;
+          z-index: 1;
+        }
 
+        .price {
+          position: absolute;
+          font-size: 20px;
+          font-weight: 700;
+          top: 15px;
+          right: 15px;
+          margin-left: 5px;
+        }
+
+        img {
+          width: 100px;
+          height: 100px;
+          position: absolute;
+          top: 75px;
+          right: -20px;
+        }
+
+        svg {
+          position: absolute;
+          bottom: -2px;
+          left: 15px;
+          background-color: white;
+          color: black;
+          border-radius: 5px;
+          font-size: 26px;
+
+          &:hover {
+          cursor: pointer;
+          }
+        }
     }
   }
 
