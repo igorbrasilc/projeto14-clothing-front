@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Main from './mains/Main.jsx';
+import ProductScreen from './mains/ProductScreen.jsx';
 
 import ResetCSS from '../assets/resetCss.js';
 import GlobalStyles from '../assets/GlobalStyles.js';
@@ -14,6 +15,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Main />} />
+          <Route path="/product" element={<ProductScreen />} />
         </Routes>
       </BrowserRouter>
     </>

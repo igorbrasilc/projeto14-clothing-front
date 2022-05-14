@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import 'regenerator-runtime/runtime';
 import styled from 'styled-components';
 import axios from 'axios';
 
@@ -11,8 +13,44 @@ import FooterMain from '../footers/FooterMain.jsx';
 // string e um ternario na classe do css. () => handleCategorie('hat');
 
 export default function Main() {
-  function handleCategorie(categorie) {
-    console.log(categorie);
+  const URL = 'http://localhost:5000/';
+  const navigate = useNavigate();
+
+  const [cssCategorie, setCssCategorie] = useState('all');
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get(URL)
+      .then((response) => setProducts(response.data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  function getDescription(productId) {
+    navigate('/product', {
+      state: {
+        productId
+      }
+    });
+  }
+
+  async function handleCategorie(categorie) {
+    setCssCategorie(categorie);
+
+    if (categorie === 'all') {
+      try {
+        await axios.get(URL)
+          .then((response) => setProducts(response.data));
+      } catch (e) {
+        console.log('Erro', e);
+      }
+    } else {
+      try {
+        await axios.get(`${URL}products/${categorie}`)
+          .then((response) => setProducts(response.data));
+      } catch (e) {
+        console.log('Erro', e);
+      }
+    }
   }
 
   return (
@@ -28,30 +66,80 @@ export default function Main() {
         </h1>
       </section>
       <section className="categories">
-        <button type="button" className="selected" onClick={() => handleCategorie('all')}>All</button>
-        <button type="button" className="" onClick={() => handleCategorie('hat')}>Hats</button>
-        <button type="button" className="" onClick={() => handleCategorie('bonnet')}>Bonnets</button>
-        <button type="button" className="" onClick={() => handleCategorie('cap')}>Caps</button>
-        <button type="button" className="" onClick={() => handleCategorie('hood')}>Hoods</button>
+        <button type="button" className={cssCategorie === 'all' ? 'selected' : ''} onClick={() => handleCategorie('all')}>All</button>
+        <button type="button" className={cssCategorie === 'hat' ? 'selected' : ''} onClick={() => handleCategorie('hat')}>Hats</button>
+        <button type="button" className={cssCategorie === 'bonnet' ? 'selected' : ''} onClick={() => handleCategorie('bonnet')}>Bonnets</button>
+        <button type="button" className={cssCategorie === 'cap' ? 'selected' : ''} onClick={() => handleCategorie('cap')}>Caps</button>
+        <button type="button" className={cssCategorie === 'hood' ? 'selected' : ''} onClick={() => handleCategorie('hood')}>Hoods</button>
       </section>
       <section className="products">
-        <article>
-          <h2>Chapéu do Grêmio borrado</h2>
-          <p className="price">$40</p>
-          <img src="https://i.ibb.co/xLTM5MF/ok-24.png" />
-          <IoIosAdd />
-        </article>
-        <article>
-          <h2>titulo</h2>
-          <p className="price">$40</p>
-          <img src="#" />
-          <IoIosAdd />
-        </article>
+        {products.map((product) => (
+          <ProductWrapper bgColor={product.color}>
+            <h2>{product.name}</h2>
+            <p className="price">
+              $
+              {parseInt(product.price.replace(',', '.')).toFixed(0)}
+            </p>
+            <img src={product.image} alt={product.name} />
+            <IoIosAdd onClick={() => getDescription(product._id)} />
+          </ProductWrapper>
+        ))}
       </section>
       <FooterMain />
     </MainWrapper>
   );
 }
+
+const ProductWrapper = styled.article`
+      height: 200px;
+      padding: 70px;
+      margin: 12px 20px;
+      background-color: ${(props) => props.bgColor};
+      border-radius: 15px;
+      position: relative;
+
+        h2 {
+          position: absolute;
+          /* word-break: break-all; */
+          line-height: 20px;
+          font-size: 15px;
+          font-weight: 400;
+          top: 40px;
+          left: 10px;
+          z-index: 1;
+        }
+
+        .price {
+          position: absolute;
+          font-size: 20px;
+          font-weight: 700;
+          top: 15px;
+          right: 15px;
+          margin-left: 5px;
+        }
+
+        img {
+          width: 100px;
+          height: 100px;
+          position: absolute;
+          top: 75px;
+          right: -20px;
+        }
+
+        svg {
+          position: absolute;
+          bottom: -2px;
+          left: 15px;
+          background-color: white;
+          color: black;
+          border-radius: 5px;
+          font-size: 26px;
+
+          &:hover {
+          cursor: pointer;
+          }
+        }
+`;
 
 const MainWrapper = styled.main`
 display: flex;
@@ -120,58 +208,5 @@ font-family: var(--font);
     overflow: auto;
     scrollbar-color: var(--color-theme) white;
     scrollbar-width: thin;
-
-    article {
-      height: 200px;
-      padding: 70px;
-      margin: 12px 20px;
-      background-color: red;
-      border-radius: 15px;
-      position: relative;
-
-        h2 {
-          position: absolute;
-          /* word-break: break-all; */
-          line-height: 20px;
-          font-size: 15px;
-          font-weight: 400;
-          top: 40px;
-          left: 10px;
-          z-index: 1;
-        }
-
-        .price {
-          position: absolute;
-          font-size: 20px;
-          font-weight: 700;
-          top: 15px;
-          right: 15px;
-          margin-left: 5px;
-        }
-
-        img {
-          width: 100px;
-          height: 100px;
-          position: absolute;
-          top: 75px;
-          right: -20px;
-        }
-
-        svg {
-          position: absolute;
-          bottom: -2px;
-          left: 15px;
-          background-color: white;
-          color: black;
-          border-radius: 5px;
-          font-size: 26px;
-
-          &:hover {
-          cursor: pointer;
-          }
-        }
-    }
   }
-
-  
 `;
