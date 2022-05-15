@@ -9,10 +9,15 @@ import ResetCSS from '../assets/resetCss.js';
 import GlobalStyles from '../assets/GlobalStyles.js';
 import Signin from './user/signin.jsx';
 import Signup from './user/signup.jsx';
-import UserContext from '../context/UserContext.jsx';
+import UserContext from './context/userContext.jsx';
+import Cart from './user/cart.jsx';
 
 export default function App() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState( () => {
+    const saved = localStorage.getItem('user');
+        const initialValue = JSON.parse(saved);
+        return initialValue || {};
+    });
 
   return (
     <UserContext.Provider value={{user, setUser}}>
@@ -24,6 +29,7 @@ export default function App() {
           <Route path="/product" element={<ProductScreen />} />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/signin" element={<Signin/>} />
+          <Route path="/cart" element={<Cart/>} />
         </Routes>
       </BrowserRouter>
     </UserContext.Provider>

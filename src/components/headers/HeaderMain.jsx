@@ -1,15 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
 
 import { IoIosLogIn, IoIosContact } from 'react-icons/io';
 import { IoCar, IoCartOutline } from 'react-icons/io5';
 
 export default function HeaderMain() {
+  const navigate = useNavigate();
+
   return (
     <HeaderWrapper>
       {1 === 1 ? <IoIosLogIn /> : <IoIosContact />}
       <div>
-        <IoCartOutline />
+        <IoCartOutline onClick={() => navigate("/cart")}/>
         {1 === 1 ? <span>.</span> : <></>}
       </div>
     </HeaderWrapper>

@@ -14,8 +14,18 @@ function signup(user) {
     return axios.post(`${URL}/signup`, (user));
 }
 
+function getCart(token) {
+    return axios.get(`${URL}/cart`, config(token));
+}
+
+function getProduct(id) {
+    return axios.get(`${URL}/product/${id}`);
+}
+
+
+
 const api = {
-    signin, signup, 
+    signin, signup, getCart, getProduct 
 }
 
 export default api;

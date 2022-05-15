@@ -5,7 +5,7 @@ import { useState, useContext } from "react";
 
 import api from "../api.jsx";
 import { AccountContainer, InputForm } from "./signup.jsx";
-import { UserContext } from "../context/UserContext.jsx";
+import UserContext from "../context/userContext.jsx";
 
 export default function Signin() {
     const navigate = useNavigate();
@@ -14,14 +14,6 @@ export default function Signin() {
         password: '',
         email: ''
     });
-
-    // Recover token in localStorage
-    useEffect(() => {
-        if (window.localStorage.getItem("user") !== null) {
-            setUser(JSON.parse(window.localStorage.getItem("user")));
-            navigate("/");
-        }
-    }, [])
 
     function submitSignin(event) {
         event.preventDefault();
@@ -32,7 +24,7 @@ export default function Signin() {
             const toLocalStorage = {
                 token,
                 user
-            }
+            };
             localStorage.setItem('user', JSON.stringify(toLocalStorage));
             setUser(toLocalStorage);
             navigate("/");
