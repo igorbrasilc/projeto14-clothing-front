@@ -1,36 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useParams } from 'react-router-dom';
+import 'regenerator-runtime/runtime';
+
 import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 import HeaderProduct from '../headers/HeaderProduct.jsx';
 import FooterProduct from '../footers/FooterProduct.jsx';
 
 export default function ProductScreen() {
-  const { productId } = useParams(); // pega o id do produto direcionado
-  console.log(productId);
+  const { productId } = useParams();
+  const [product, setProduct] = useState({});
+  const [quantity, setQuantity] = useState(1);
 
-  return (
+  const URL = 'http://localhost:5000/';
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`${URL}product/${productId}`)
+      .then((response) => setProduct(response.data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  function decreaseQuantity() {
+    if (quantity > 1) setQuantity(quantity - 1);
+  }
+
+  function increaseQuantity() {
+    if (quantity < product.stock) setQuantity(quantity + 1);
+    else alert('Quantidade acima do estoque');
+  }
+
+  return product ? (
     <ProductWrapper>
       <HeaderProduct />
-      <ProductImg>
-        <img src="https://i.ibb.co/Mhj6wTv/ok-25.png" alt="dasdsa" />
+      <ProductImg bgColor={product.color}>
+        <img src={product.image} alt={product.name} />
       </ProductImg>
       <section className="product-description">
-        <h1>Titulo</h1>
-        <p className="price">price</p>
-        <h2>Description dhasjkdas dsakjh dsadsa asdsadsad asdsa asdas asdsa asd asd a</h2>
+        <h1>{product.name}</h1>
+        <p className="price">
+          $
+          {parseInt(product.price?.replace(',', '.')).toFixed(0)}
+        </p>
+        <h2>{product.description}</h2>
         <div className="quantity-container">
           <p>Quantity</p>
           <div className="buttons">
-            <button type="button" className="decrease-button">-</button>
-            <span>10</span>
-            <button type="button" className="increase-button">+</button>
+            <button type="button" className="decrease-button" onClick={() => decreaseQuantity()}>-</button>
+            <span>{quantity}</span>
+            <button type="button" className="increase-button" onClick={() => increaseQuantity()}>+</button>
           </div>
         </div>
       </section>
       <FooterProduct />
     </ProductWrapper>
-  );
+  )
+    : (<></>);
 }
 
 const ProductImg = styled.section`
@@ -44,7 +70,7 @@ position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: green;
+  background-color: ${props => props.bgColor};
   z-index: 0;
 
   img {

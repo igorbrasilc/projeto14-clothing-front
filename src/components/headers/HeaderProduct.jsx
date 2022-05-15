@@ -1,13 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
-import { IoIosArrowRoundBack} from 'react-icons/io';
+import { IoIosArrowRoundBack } from 'react-icons/io';
 import { IoCartOutline } from 'react-icons/io5';
 
 export default function HeaderProduct() {
+  const navigate = useNavigate();
+
   return (
     <HeaderWrapper>
-      <IoIosArrowRoundBack />
+      <IoIosArrowRoundBack onClick={() => navigate('/')} />
       <div>
         <IoCartOutline />
         {1 === 1 ? <span>.</span> : <></>}
