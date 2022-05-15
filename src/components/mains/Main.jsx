@@ -203,3 +203,5 @@ font-family: var(--font);
     scrollbar-width: thin;
   }
 `;
+
+export { MainWrapper };
