@@ -4,7 +4,7 @@ const GlobalStyle = createGlobalStyle`
 * {
   box-sizing: border-box;
   transition: 300ms;
-  --color-thema: #FF233D;
+  --color-theme: #FF233D;
   --font: 'Roboto', sans-serif;
 }
 
