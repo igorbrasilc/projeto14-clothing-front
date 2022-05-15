@@ -9,10 +9,6 @@ import { IoIosAdd } from 'react-icons/io';
 import HeaderMain from '../headers/HeaderMain.jsx';
 import FooterMain from '../footers/FooterMain.jsx';
 
-
-// ideia para selecionar as categorias: colocar um estado categorie que é atualizado de acordo com
-// string e um ternario na classe do css. () => handleCategorie('hat');
-
 export default function Main() {
   const URL = 'http://localhost:5000/';
   const navigate = useNavigate();
@@ -27,11 +23,7 @@ export default function Main() {
   }, []);
 
   function getDescription(productId) {
-    navigate('/product', {
-      state: {
-        productId
-      }
-    });
+    navigate(`/product/${productId}`);
   }
 
   async function handleCategorie(categorie) {
