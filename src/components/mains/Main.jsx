@@ -9,6 +9,7 @@ import { IoIosAdd } from 'react-icons/io';
 import HeaderMain from '../headers/HeaderMain.jsx';
 import FooterMain from '../footers/FooterMain.jsx';
 
+
 // ideia para selecionar as categorias: colocar um estado categorie que é atualizado de acordo com
 // string e um ternario na classe do css. () => handleCategorie('hat');
 
@@ -210,3 +211,5 @@ font-family: var(--font);
     scrollbar-width: thin;
   }
 `;
+
+export { MainWrapper };
