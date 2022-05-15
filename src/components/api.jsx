@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-const URL = 'localhost:5000';
+const URL = 'http://localhost:5000';
 
 function config(token){
     return { headers: { authorization : `Bearer ${token}` }}
 }
 
 function signin(user) {
-    return axios.post(`${URL}/login`, (user));
+    return axios.post(`${URL}/signin`, (user));
 }
 
 function signup(user) {

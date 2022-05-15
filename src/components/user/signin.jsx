@@ -17,6 +17,7 @@ export default function Signin() {
         event.preventDefault();
 
         api.signin(userData).then((e) => {
+            console.log(e)
             navigate("/");
         }).catch((error) => {
             console.log(error);

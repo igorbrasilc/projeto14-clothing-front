@@ -7,21 +7,21 @@ import api from "../api.jsx";
 
 export default function Signup() {
     const navigate = useNavigate();
-    const userData = useState({
+    const [userData, setUserData] = useState({
         name: '',
         email: '',
         password: '',
-        confirPassword: ''
+        confirmPassword: ''
     });
 
     function registerUser(event) {
         event.preventDefault();
-
-        if(parseInt(userData.password) === parseInt(confirmPassword)){
+        
+        if(parseInt(userData.password) === parseInt(userData.confirmPassword)){
             api.signup(userData).then((e) => {
                 console.log(e)
                 alert("User created successfully");
-                navigate("/");
+                navigate("/signin");
             }).catch((error) => {
                 console.log(error);
                 alert(error.message);
@@ -35,7 +35,7 @@ export default function Signup() {
         <AccountContainer>
             <h1>Clothing</h1>
             <InputForm onSubmit={registerUser}>
-                <input type="text" placeholder="Name" onChange={(e) => setUserData({...userData, username: e.target.value})} required />
+                <input type="text" placeholder="Name" onChange={(e) => setUserData({...userData, name: e.target.value})} required />
                 <input type="email" placeholder="E-mail" onChange={(e) => setUserData({...userData, email: e.target.value})} required />
                 <input type="password" placeholder="Password" onChange={(e) => setUserData({...userData, password: e.target.value})} required />
                 <input type="password" placeholder="Confirm password" onChange={(e) => setUserData({...userData, confirmPassword: e.target.value})} required />
