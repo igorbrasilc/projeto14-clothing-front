@@ -1,16 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { IoMdArrowBack, IoIosTrash } from 'react-icons/io';
+import { IoMdArrowBack, IoIosTrash, IoMdAdd, IoMdRemove } from 'react-icons/io';
 
 import { MainWrapper } from '../mains/Main.jsx';
 import api from "../api.jsx";
 import UserContext from "../context/userContext.jsx";
 
+let count = 0;
+
 export default function Cart() {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
     const [cart, setCart] = useState([]);
+    const [update, setUpdate] = useState(0);
     
     useEffect(() => {
         api.getCart(user.token).then((response) => {
@@ -18,8 +21,8 @@ export default function Cart() {
         }).catch((error) => {
             console.log(error);
         })
-    }, []);
-    //console.log(cart)
+    }, [update]);
+
     return(
         <MainWrapper>
             <CartHeader>
@@ -36,15 +39,16 @@ export default function Cart() {
             </section>
             <ProductsSection>
                 {!cart ? <h1>Carrinho está vazio</h1> :
-                cart.map((item, index) => <Products key={index} item={item}/>)}
+                cart.map((item, index) => <Products key={index} item={item} token={user.token} setUpdate={setUpdate}/>)}
             </ProductsSection>
         </MainWrapper>
     );
 }
 
 function Products(props){
-    const { item } = props;
+    const { item, key, token, setUpdate} = props;
     const [product, setProduct] = useState([]);
+
     useEffect(() => {
         api.getProduct(item.productId).then((response) => {
             if(response.data != 0){setProduct(response.data);}
@@ -52,20 +56,49 @@ function Products(props){
             console.log(error);
         })
     }, []);
-    console.log(product);
+    
+    async function deleteFromCart(productId){  
+        api.removeProduct(productId, token).then((response) =>{
+            setUpdate(count++); // Updates the cart
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
+    async function editCart(productId, quantity){
+        console.log(typeof quantity)
+        api.editCart({productId, quantity: parseInt(quantity)}, token).then((response) =>{
+            setUpdate(count++); // Updates the cart
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+    }
+
     return(
-        <ProductDiv color={product.color}>
+        <ProductDiv color={product.color} key={key}>
             <div></div>
             <img src={product.image} alt={product.name} />
             <section>
                 <p>{product.name}</p>
                 <p className='price'>${product.price}</p>
             </section>
-            <IoIosTrash className='delete' />
+            <article>
+                <section>
+                    <p>{item.quantity}</p>
+                </section>
+                <section className='edit-cart'>
+                    <IoMdAdd onClick={() => editCart(product._id, 1)}/>
+                    <IoMdRemove onClick={() => editCart(product._id, -1)}/>
+                </section>
+            </article>
+            <IoIosTrash className='delete' onClick={() => deleteFromCart(product._id)}/>
         </ProductDiv>
     );
 
 }
+
 
 const ProductsSection = styled.section`
     display: flex;
@@ -86,6 +119,17 @@ const ProductDiv = styled.div`
     
     .delete {
         font-size: 20px;
+    }
+
+    article {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .edit-cart {
+        display: flex;
+        flex-direction: column;
+        
     }
 
     div {

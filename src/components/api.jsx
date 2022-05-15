@@ -22,10 +22,16 @@ function getProduct(id) {
     return axios.get(`${URL}/product/${id}`);
 }
 
+function removeProduct(id, token) {
+    return axios.delete(`${URL}/remove-from-cart/${id}`, config(token));
+}
 
+function editCart(obj, key) {
+    return axios.put(`${URL}/edit-cart/`, (obj), config(key));
+}
 
 const api = {
-    signin, signup, getCart, getProduct 
+    signin, signup, getCart, getProduct, removeProduct, editCart 
 }
 
 export default api;
