@@ -1,23 +1,40 @@
 import styled from "styled-components";
 import React from 'react';
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import api from "../api.jsx";
 import { AccountContainer, InputForm } from "./signup.jsx";
+import { UserContext } from "../context/UserContext.jsx";
 
 export default function Signin() {
     const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
     const [userData, setUserData] = useState({
         password: '',
         email: ''
     });
 
+    // Recover token in localStorage
+    useEffect(() => {
+        if (window.localStorage.getItem("user") !== null) {
+            setUser(JSON.parse(window.localStorage.getItem("user")));
+            navigate("/");
+        }
+    }, [])
+
     function submitSignin(event) {
         event.preventDefault();
 
-        api.signin(userData).then((e) => {
-            console.log(e)
+        api.signin(userData).then((response) => {
+            const { token, user } = response.data;
+            //save token in local storage
+            const toLocalStorage = {
+                token,
+                user
+            }
+            localStorage.setItem('user', JSON.stringify(toLocalStorage));
+            setUser(toLocalStorage);
             navigate("/");
         }).catch((error) => {
             console.log(error);
