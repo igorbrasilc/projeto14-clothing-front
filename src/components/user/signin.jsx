@@ -7,32 +7,32 @@ import { AccountContainer, InputForm } from './signup.jsx';
 import UserContext from '../context/userContext.jsx';
 
 export default function Signin() {
-  const navigate = useNavigate();
-  const { user, setUser } = useContext(UserContext);
-  const [userData, setUserData] = useState({
-    password: '',
-    email: '',
-  });
+    const navigate = useNavigate();
+    const { user, setUser } = useContext(UserContext);
+    const [userData, setUserData] = useState({
+        email: '',
+        password: ''
+    });
 
   function submitSignin(event) {
     event.preventDefault();
 
-    api.signin(userData).then((response) => {
-      const { token, user } = response.data;
-      console.log(response);
-      // save token in local storage
-      const toLocalStorage = {
-        token,
-        user,
-      };
-      localStorage.setItem('user', JSON.stringify(toLocalStorage));
-      setUser(toLocalStorage);
-      navigate('/');
-    }).catch((error) => {
-      console.log(error);
-      alert('User not found');
-    });
-  }
+        api.signin(userData).then((response) => {
+            const { token, user } = response.data;
+            console.log(token)
+            //save token in local storage
+            const toLocalStorage = {
+                token,
+                user
+            };
+            localStorage.setItem('user', JSON.stringify(toLocalStorage));
+            setUser(toLocalStorage);
+            navigate("/");
+        }).catch((error) => {
+            console.log(error);
+            alert("User not found");
+        })
+    }
 
   return (
     <AccountContainer>
