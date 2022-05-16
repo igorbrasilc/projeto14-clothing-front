@@ -8,12 +8,13 @@ import api from "../api.jsx";
 import UserContext from "../context/userContext.jsx";
 
 let count = 0;
-
+let testTotal = 0;
 export default function Cart() {
     const navigate = useNavigate();
     const { user } = useContext(UserContext);
     const [cart, setCart] = useState([]);
     const [update, setUpdate] = useState(0);
+    const [cartTotal, setCartTotal] = useState(0);
     
     useEffect(() => {
         api.getCart(user.token).then((response) => {
@@ -38,15 +39,22 @@ export default function Cart() {
                 </h1>
             </section>
             <ProductsSection>
-                {!cart ? <h1>Carrinho está vazio</h1> :
-                cart.map((item, index) => <Products key={index} item={item} token={user.token} setUpdate={setUpdate}/>)}
+                {!cart[0] ? <h1>Carrinho está vazio</h1> :
+                cart.map((item, index) => <Products key={index} item={item} token={user.token} cartTotal={cartTotal} setCartTotal={setCartTotal} setUpdate={setUpdate}/>)}
             </ProductsSection>
+            <CartFooter>
+                <section className='cart-total'>
+                    <p>{cart.length} itens</p>
+                    <p className='total-price'>Total: ${cartTotal}</p>
+                </section>
+                <button type="button" onClick={() => "checkout"}>Checkout</button>
+            </CartFooter>
         </MainWrapper>
     );
 }
 
 function Products(props){
-    const { item, key, token, setUpdate} = props;
+    const { item, key, token, setUpdate, cartTotal, setCartTotal} = props;
     const [product, setProduct] = useState([]);
 
     useEffect(() => {
@@ -67,14 +75,20 @@ function Products(props){
     }
 
     async function editCart(productId, quantity){
-        console.log(typeof quantity)
-        api.editCart({productId, quantity: parseInt(quantity)}, token).then((response) =>{
+        api.editCart({ productId, quantity }, token).then((response) =>{
             setUpdate(count++); // Updates the cart
+            setCartTotal((parseFloat(product.price) * quantity) + cartTotal)
         })
         .catch((error) => {
             console.log(error);
         })
     }
+    
+    useEffect(() => {
+        if (typeof product.price !== "undefined"){ 
+            setCartTotal((parseFloat(product.price) * parseInt(item.quantity)) + cartTotal)
+        }
+    }, [product.price]);
 
     return(
         <ProductDiv color={product.color} key={key}>
@@ -98,7 +112,6 @@ function Products(props){
     );
 
 }
-
 
 const ProductsSection = styled.section`
     display: flex;
@@ -157,12 +170,47 @@ const CartHeader = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
     width: 100%;
     height: 50px;
     margin: 20px 0 20px;
 
+
     .return {
         font-size: 25px;
         margin-left: 20px;
+    }
+`
+
+const CartFooter = styled.footer`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+    button {
+        height: 45px;
+        width:100%;
+        background-color: #FF233D;
+        font-size: 20px;
+        border-radius: 15px 15px 0 0;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #FFFFFF;
+    }
+
+    .cart-total {
+        margin-bottom: 10px;
     }
 `

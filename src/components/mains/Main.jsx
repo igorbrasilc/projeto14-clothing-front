@@ -202,6 +202,18 @@ font-family: var(--font);
     scrollbar-color: var(--color-theme) white;
     scrollbar-width: thin;
   }
+
+  .cart-total {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    
+    .total-price {
+      font-weight: 700;
+    }
+  }
 `;
 
 export { MainWrapper };
