@@ -3,14 +3,14 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import { IoIosLogIn, IoIosContact } from 'react-icons/io';
+import { IoIosLogIn, IoIosLogOut } from 'react-icons/io';
 import { IoCartOutline } from 'react-icons/io5';
 
 import UserContext from '../context/userContext.jsx';
 
 export default function HeaderMain() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   function checkAndGoToCart() {
     if (user.token !== '') navigate('/cart');
@@ -23,7 +23,12 @@ export default function HeaderMain() {
 
   return (
     <HeaderWrapper>
-      {user.token === '' ? <IoIosLogIn /> : <IoIosContact />}
+      {user.token === '' ? <IoIosLogIn onClick={() => navigate('/signin')} /> : (
+        <IoIosLogOut onClick={() => {
+          setUser({ token: '', user: '' });
+        }}
+        />
+      )}
       <div>
         <IoCartOutline onClick={() => checkAndGoToCart()} />
         {user.token !== '' ? <span>.</span> : <></>}

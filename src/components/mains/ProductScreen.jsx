@@ -18,7 +18,7 @@ export default function ProductScreen() {
   const [quantity, setQuantity] = useState(1);
   const { user } = useContext(UserContext);
 
-  const URL = 'http://localhost:5000/';
+  const URL = 'https://clothing-projeto14.herokuapp.com/';
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,7 +76,7 @@ export default function ProductScreen() {
           <h1>{product.name}</h1>
           <p className="price">
             $
-            {parseInt(product.price.replace(',', '.')).toFixed(0)}
+            {parseInt(product.price?.replace(',', '.')).toFixed(0)}
           </p>
           <h2>{product.description}</h2>
           <div className="quantity-container">

@@ -1,49 +1,48 @@
-import styled from "styled-components";
-import React from 'react';
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import styled from 'styled-components';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import api from "../api.jsx";
+import api from '../api.jsx';
 
 export default function Signup() {
-    const navigate = useNavigate();
-    const [userData, setUserData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
+  const navigate = useNavigate();
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
 
-    function registerUser(event) {
-        event.preventDefault();
-        
-        if(parseInt(userData.password) === parseInt(userData.confirmPassword)){
-            api.signup(userData).then((e) => {
-                console.log(e)
-                alert("User created successfully");
-                navigate("/signin");
-            }).catch((error) => {
-                console.log(error);
-                alert(error.message);
-            })
-        }else {
-            alert("Passwords do not match");
-        }
+  function registerUser(event) {
+    event.preventDefault();
+
+    if (parseInt(userData.password) === parseInt(userData.confirmPassword)) {
+      api.signup(userData).then((e) => {
+        console.log(e);
+        alert('User created successfully');
+        navigate('/signin');
+      }).catch((error) => {
+        console.log(error);
+        alert(error.message);
+      });
+    } else {
+      alert('Passwords do not match');
     }
+  }
 
-    return (
-        <AccountContainer>
-            <h1>Clothing</h1>
-            <InputForm onSubmit={registerUser}>
-                <input type="text" placeholder="Name" onChange={(e) => setUserData({...userData, name: e.target.value})} required />
-                <input type="email" placeholder="E-mail" onChange={(e) => setUserData({...userData, email: e.target.value})} required />
-                <input type="password" placeholder="Password" onChange={(e) => setUserData({...userData, password: e.target.value})} required />
-                <input type="password" placeholder="Confirm password" onChange={(e) => setUserData({...userData, confirmPassword: e.target.value})} required />
-                <button type="submit"><p>Sign Up</p></button>
-            </InputForm>
-            <h2 onClick={() =>  navigate("/signin")}>Already have an account? Log in</h2>
-        </AccountContainer>
-    );
+  return (
+    <AccountContainer>
+      <h1>The Hat Store</h1>
+      <InputForm onSubmit={registerUser}>
+        <input type="text" placeholder="Name" onChange={(e) => setUserData({ ...userData, name: e.target.value })} required />
+        <input type="email" placeholder="E-mail" onChange={(e) => setUserData({ ...userData, email: e.target.value })} required />
+        <input type="password" placeholder="Password" onChange={(e) => setUserData({ ...userData, password: e.target.value })} required />
+        <input type="password" placeholder="Confirm password" onChange={(e) => setUserData({ ...userData, confirmPassword: e.target.value })} required />
+        <button type="submit"><p>Cadastrar</p></button>
+      </InputForm>
+      <h2 onClick={() => navigate('/signin')}>Já tem uma conta? Entrar</h2>
+    </AccountContainer>
+  );
 }
 
 const AccountContainer = styled.div`
@@ -59,13 +58,20 @@ const AccountContainer = styled.div`
         font-style: normal;
         font-weight: 400;
         font-size: 40px;
-        color: #FF233D;
+        color: var(--color-theme);
     }
     h2 {
         margin-top: 36px;
-        color: #FFFFFF;
+        font-family: var(--font);
+        font-size: 16px;
+        text-decoration-line: underline;
+        color: var(--color-theme);
+
+        &:hover{
+          cursor: pointer;
+        }
     }
-`
+`;
 
 const InputForm = styled.form`
     display: flex;
@@ -93,7 +99,11 @@ const InputForm = styled.form`
         justify-content: center;
         align-items: center;
         color: #FFFFFF;
+
+        &:hover{
+          cursor: pointer;
+        }
     }
-`
+`;
 
 export { AccountContainer, InputForm };

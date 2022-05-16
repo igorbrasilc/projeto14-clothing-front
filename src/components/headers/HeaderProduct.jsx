@@ -59,8 +59,8 @@ const HeaderWrapper = styled.header`
       position: absolute;
       right: 0;
       top: 2px;
-      width: 15px;
-      height: 15px;
+      width: 8px;
+      height: 8px;
       background-color: black;
       border-radius: 50%;
     }
