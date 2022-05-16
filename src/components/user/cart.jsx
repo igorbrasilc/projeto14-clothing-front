@@ -120,6 +120,11 @@ const ProductsSection = styled.section`
     justify-content: center;
     width: 100%;
 
+    h1{
+        margin-top: 100px;
+        font-weight: 700;
+    }
+
 `
 
 const ProductDiv = styled.div`
@@ -170,10 +175,6 @@ const CartHeader = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1;
     width: 100%;
     height: 50px;
     margin: 20px 0 20px;

@@ -10,7 +10,7 @@ import HeaderMain from '../headers/HeaderMain.jsx';
 import FooterMain from '../footers/FooterMain.jsx';
 
 export default function Main() {
-  const URL = 'http://localhost:5000/';
+  const URL = 'https://clothing-projeto14.herokuapp.com/';
   const navigate = useNavigate();
 
   const [cssCategorie, setCssCategorie] = useState('all');

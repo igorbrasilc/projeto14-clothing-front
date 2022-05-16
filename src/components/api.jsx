@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = 'http://localhost:5000';
+const URL = "https://clothing-projeto14.herokuapp.com";
 
 function config(token){
     return { headers: { authorization : `Bearer ${token}` }}
@@ -31,7 +31,7 @@ function editCart(obj, key) {
 }
 
 const api = {
-    signin, signup, getCart, getProduct, removeProduct, editCart 
+    signin, signup, getCart, getProduct, removeProduct, editCart
 }
 
 export default api;

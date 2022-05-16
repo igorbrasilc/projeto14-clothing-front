@@ -11,8 +11,8 @@ export default function Signin() {
     const navigate = useNavigate();
     const { user, setUser } = useContext(UserContext);
     const [userData, setUserData] = useState({
-        password: '',
-        email: ''
+        email: '',
+        password: ''
     });
 
     function submitSignin(event) {
@@ -20,6 +20,7 @@ export default function Signin() {
 
         api.signin(userData).then((response) => {
             const { token, user } = response.data;
+            console.log(token)
             //save token in local storage
             const toLocalStorage = {
                 token,
