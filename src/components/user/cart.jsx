@@ -10,14 +10,13 @@ import { MainWrapper } from '../mains/Main.jsx';
 import api from '../api.jsx';
 import UserContext from '../context/userContext.jsx';
 
-let count = 0;
+const count = 0;
 const testTotal = 0;
 
 export default function Cart() {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [cart, setCart] = useState([]);
-  const [update, setUpdate] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
 
   const URL = 'https://clothing-projeto14.herokuapp.com/';
@@ -28,14 +27,6 @@ export default function Cart() {
       Authorization: `Bearer ${user.token}`,
     },
   };
-
-  useEffect(() => {
-    api.getCart(user.token).then((response) => {
-      if (response.data != 0) { setCart(response.data); }
-    }).catch((error) => {
-      console.log(error);
-    });
-  }, [update]);
 
   async function checkout() {
     const objToPost = {
@@ -54,6 +45,18 @@ export default function Cart() {
     }
   }
 
+  useEffect(() => {
+    api.getCart(user.token).then((response) => {
+      if (response.data != 0) {
+        setCart(response.data);
+      } else {
+        setCart([]);
+      }
+    }).catch((error) => {
+      console.log(error);
+    });
+  }, [cartTotal]);
+
   return (
     <MainWrapper>
       <CartHeader>
@@ -70,7 +73,7 @@ export default function Cart() {
       </section>
       <ProductsSection>
         {!cart[0] ? <h1>Carrinho está vazio</h1>
-          : cart.map((item, index) => <Products key={index} item={item} token={user.token} cartTotal={cartTotal} setCartTotal={setCartTotal} setUpdate={setUpdate} />)}
+          : cart.map((item, index) => <Products key={index} item={item} token={user.token} cartTotal={cartTotal} setCartTotal={setCartTotal} />)}
       </ProductsSection>
       <CartFooter>
         <section className="cart-total">
@@ -92,7 +95,7 @@ export default function Cart() {
 
 function Products(props) {
   const {
-    item, key, token, setUpdate, cartTotal, setCartTotal,
+    item, key, token, cartTotal, setCartTotal,
   } = props;
   const [product, setProduct] = useState([]);
 
@@ -104,18 +107,16 @@ function Products(props) {
     });
   }, []);
 
-  async function deleteFromCart(productId) {
-    api.removeProduct(productId, token).then((response) => {
-      setUpdate(count++); // Updates the cart
+  async function deleteFromCart(productId, quantity) {
+    await api.removeProduct(productId, token).then((response) => {
+      setCartTotal(cartTotal - (parseFloat(product.price) * quantity));
     })
       .catch((error) => {
         console.log(error);
       });
   }
-
   async function editCart(productId, quantity) {
-    api.editCart({ productId, quantity }, token).then((response) => {
-      setUpdate(count++); // Updates the cart
+    await api.editCart({ productId, quantity }, token).then((response) => {
       setCartTotal((parseFloat(product.price) * quantity) + cartTotal);
     })
       .catch((error) => {
@@ -149,7 +150,7 @@ function Products(props) {
           <IoMdRemove onClick={() => editCart(product._id, -1)} />
         </section>
       </article>
-      <IoIosTrash className="delete" onClick={() => deleteFromCart(product._id)} />
+      <IoIosTrash className="delete" onClick={() => deleteFromCart(product._id, item.quantity)} />
     </ProductDiv>
   );
 }
@@ -160,6 +161,7 @@ const ProductsSection = styled.section`
     align-items: center;
     justify-content: center;
     width: 100%;
+    padding-bottom: 80px;
 
     h1{
         margin-top: 100px;
