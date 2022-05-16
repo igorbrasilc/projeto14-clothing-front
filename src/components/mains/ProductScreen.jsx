@@ -18,6 +18,12 @@ export default function ProductScreen() {
   const [quantity, setQuantity] = useState(1);
   const { user } = useContext(UserContext);
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  };
+
   const URL = 'https://clothing-projeto14.herokuapp.com/';
   const navigate = useNavigate();
 
@@ -40,11 +46,12 @@ export default function ProductScreen() {
     const objToPost = {
       productId,
       quantity,
+      // user: user.user,
     };
 
     if (user.token !== '') {
       try {
-        await axios.post(`${URL}add-to-cart`, objToPost)
+        await axios.post(`${URL}add-to-cart`, objToPost, config)
           .then(() => {
             alert('Adicionado ao carrinho!');
             navigate('/');
