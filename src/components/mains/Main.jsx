@@ -11,7 +11,7 @@ import HeaderMain from '../headers/HeaderMain.jsx';
 import FooterMain from '../footers/FooterMain.jsx';
 
 export default function Main() {
-  const URL = 'http://localhost:5000/';
+  const URL = 'https://clothing-projeto14.herokuapp.com/';
   const navigate = useNavigate();
 
   const [cssCategorie, setCssCategorie] = useState('all');
@@ -202,6 +202,18 @@ font-family: var(--font);
     overflow: auto;
     scrollbar-color: var(--color-theme) white;
     scrollbar-width: thin;
+  }
+
+  .cart-total {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+    
+    .total-price {
+      font-weight: 700;
+    }
   }
 `;
 
