@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 import { IoIosCart } from 'react-icons/io';
 
-export default function FooterProduct() {
+export default function FooterProduct({ callback }) {
   return (
-    <FooterWrapper>
+    <FooterWrapper onClick={() => callback()}>
       <IoIosCart />
       <p>Adicionar ao carrinho</p>
     </FooterWrapper>
