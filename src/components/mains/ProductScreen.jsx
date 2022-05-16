@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link, useParams } from 'react-router-dom';
+/* eslint-disable linebreak-style */
+/* eslint-disable import/extensions */
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import 'regenerator-runtime/runtime';
 
 import styled from 'styled-components';
@@ -8,10 +10,13 @@ import axios from 'axios';
 import HeaderProduct from '../headers/HeaderProduct.jsx';
 import FooterProduct from '../footers/FooterProduct.jsx';
 
+import UserContext from '../context/userContext.jsx';
+
 export default function ProductScreen() {
   const { productId } = useParams();
-  const [product, setProduct] = useState({});
+  const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const { user } = useContext(UserContext);
 
   const URL = 'http://localhost:5000/';
   const navigate = useNavigate();
@@ -31,33 +36,78 @@ export default function ProductScreen() {
     else alert('Quantidade acima do estoque');
   }
 
-  return product ? (
-    <ProductWrapper>
-      <HeaderProduct />
-      <ProductImg bgColor={product.color}>
-        <img src={product.image} alt={product.name} />
-      </ProductImg>
-      <section className="product-description">
-        <h1>{product.name}</h1>
-        <p className="price">
-          $
-          {parseInt(product.price?.replace(',', '.')).toFixed(0)}
-        </p>
-        <h2>{product.description}</h2>
-        <div className="quantity-container">
-          <p>Quantity</p>
-          <div className="buttons">
-            <button type="button" className="decrease-button" onClick={() => decreaseQuantity()}>-</button>
-            <span>{quantity}</span>
-            <button type="button" className="increase-button" onClick={() => increaseQuantity()}>+</button>
+  async function addToCart() {
+    const objToPost = {
+      productId,
+      quantity,
+    };
+
+    if (user.token !== '') {
+      try {
+        await axios.post(`${URL}add-to-cart`, objToPost)
+          .then(() => {
+            alert('Adicionado ao carrinho!');
+            navigate('/');
+          });
+      } catch (e) {
+        alert('Problema ao adicionar ao carrinho');
+        console.log(e);
+      }
+    } else {
+      const confirmation = confirm('Você não está logado, deseja fazer login?');
+
+      if (confirmation) navigate('/signin');
+    }
+  }
+
+  return product === null
+    ? (
+      <Loading>
+        <h1>The Hat Store</h1>
+      </Loading>
+    )
+    : (
+      <ProductWrapper>
+        <HeaderProduct />
+        <ProductImg bgColor={product.color}>
+          <img src={product.image} alt={product.name} />
+        </ProductImg>
+        <section className="product-description">
+          <h1>{product.name}</h1>
+          <p className="price">
+            $
+            {parseInt(product.price.replace(',', '.')).toFixed(0)}
+          </p>
+          <h2>{product.description}</h2>
+          <div className="quantity-container">
+            <p>Quantity</p>
+            <div className="buttons">
+              <button type="button" className="decrease-button" onClick={() => decreaseQuantity()}>-</button>
+              <span>{quantity}</span>
+              <button type="button" className="increase-button" onClick={() => increaseQuantity()}>+</button>
+            </div>
           </div>
-        </div>
-      </section>
-      <FooterProduct />
-    </ProductWrapper>
-  )
-    : (<></>);
+        </section>
+        <FooterProduct callback={addToCart} />
+      </ProductWrapper>
+    );
 }
+
+const Loading = styled.div`
+display: flex;
+align-items: center;
+justify-content: center;
+height: 100vh;
+width: 100vw;
+
+h1 {
+  font-family: 'Permanent Marker';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  color: var(--color-theme);
+}
+`;
 
 const ProductImg = styled.section`
 position: absolute;
@@ -70,7 +120,7 @@ position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${props => props.bgColor};
+  background-color: ${(props) => props.bgColor};
   z-index: 0;
 
   img {

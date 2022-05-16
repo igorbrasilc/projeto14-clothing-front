@@ -1,21 +1,32 @@
-import React from 'react';
+/* eslint-disable linebreak-style */
+import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 import { IoIosLogIn, IoIosContact } from 'react-icons/io';
 import { IoCartOutline } from 'react-icons/io5';
 
-export default function HeaderMain() {
+import UserContext from '../context/userContext.jsx';
 
-  // TODO: resolver os ternarios abaixo com as infos de login
+export default function HeaderMain() {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+  function checkAndGoToCart() {
+    if (user.token !== '') navigate('/cart');
+    else {
+      const confirmation = confirm('Você não está logado, deseja fazer login?');
+
+      if (confirmation) navigate('/signin');
+    }
+  }
 
   return (
     <HeaderWrapper>
-      {1 === 1 ? <IoIosLogIn /> : <IoIosContact />}
+      {user.token === '' ? <IoIosLogIn /> : <IoIosContact />}
       <div>
-        <IoCartOutline onClick={() => navigate("/cart")}/>
-        {1 === 1 ? <span>.</span> : <></>}
+        <IoCartOutline onClick={() => checkAndGoToCart()} />
+        {user.token !== '' ? <span>.</span> : <></>}
       </div>
     </HeaderWrapper>
   );

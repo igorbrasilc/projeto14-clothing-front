@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { IoCartOutline } from 'react-icons/io5';
 
+import UserContext from '../context/userContext.jsx';
+
 export default function HeaderProduct() {
   const navigate = useNavigate();
+  const { user } = useContext(UserContext);
+
+  function checkAndGoToCart() {
+    if (user.token !== '') navigate('/cart');
+    else {
+      const confirmation = confirm('Você não está logado, deseja fazer login?');
+
+      if (confirmation) navigate('/signin');
+    }
+  }
 
   return (
     <HeaderWrapper>
       <IoIosArrowRoundBack onClick={() => navigate('/')} />
       <div>
-        <IoCartOutline />
-        {1 === 1 ? <span>.</span> : <></>}
+        <IoCartOutline onClick={() => checkAndGoToCart()} />
+        {user.token !== '' ? <span>.</span> : <></>}
       </div>
     </HeaderWrapper>
   );
@@ -28,7 +40,7 @@ const HeaderWrapper = styled.header`
   z-index: 1;
   
   svg {
-    font-size: 25px;
+    font-size: 32px;
     color: white;
     background-color: var(--color-theme);
     border-radius: 50%;
@@ -37,7 +49,6 @@ const HeaderWrapper = styled.header`
 
     &:hover{
       cursor: pointer;
-      font-size: 30px;
     }
   }
 
@@ -48,8 +59,8 @@ const HeaderWrapper = styled.header`
       position: absolute;
       right: 0;
       top: 2px;
-      width: 8px;
-      height: 8px;
+      width: 15px;
+      height: 15px;
       background-color: black;
       border-radius: 50%;
     }
